@@ -1,26 +1,40 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import axios from 'axios';
+import Form from './components/Form';
+import API_K from './config_keys';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const API_KEY = API_K;
+
+export default class App extends Component {
+
+  state = {
+    temp: null
+  }
+
+  getWeather = (e) => {
+
+    e.preventDefault();
+
+    const city = e.target.elements.city.value;
+
+    axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`)
+    .then(res => {
+
+      const weather = res.data;
+
+      this.setState({
+        temp: weather.main.temp
+      })
+    })
+
+  }
+
+  render() {
+    return (
+      <div>
+        <Form getWeather={this.getWeather}/>
+        {this.state.temp}
+      </div>
+    )
+  }
 }
-
-export default App;
